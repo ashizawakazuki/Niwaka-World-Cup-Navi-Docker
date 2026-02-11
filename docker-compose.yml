@@ -4,4 +4,4 @@ services:
     ports:
       - "8082:80"
     volumes:
-      - ../Niwaka-World-Cup-Navi/src:/var/www/html
+      - ../Niwaka-World-Cup-Navi:/var/www/html
