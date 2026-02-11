@@ -1,7 +1,39 @@
+#開発環境で使うサーバー（コンテナ）を用意するファイル（webサーバーとDBサーバーの2つ今回は用意）
 services:
   web:
     build: .
     ports:
       - "8082:80"
     volumes:
-      - ../Niwaka-World-Cup-Navi/src:/var/www/html
+      - ../Niwaka-World-Cup-Navi:/var/www/html
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_NAME: niwaka
+      DB_USER: user
+      DB_PASSWORD: password
+
+  db:
+    image: mysql:8.0
+    container_name: niwaka-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: niwaka
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - "8083:80"     # phpMyAdmin にアクセスするURL
+    environment:
+      - PMA_HOST=db   # ← MySQLコンテナ名
+    depends_on:
+      - db
